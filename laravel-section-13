@@ -1,0 +1,66 @@
+AUTHORIZATION
+-------------
+LIMITED ACCESS TO AUTHARISED USER
+---------------------------------
+
+php artisan migrate:fresh
+php artisan db:seed --class Conversationseeder
+
+
+@foreach($conversation->replies as $reply)
+<div>
+<p class="m-0">{{reply->user->name}}said</p>
+{{$reply->body}}
+@can('update->conversation',$conversation)
+<form action="">
+<button>
+type="submit"
+class="btn"
+>best reply?
+</button>
+</form>
+@endcan
+</div>
+@content($loop->lost)
+@endforeach
+
+
+
+for this section i was learned how to give reply against a comment..
+
+
+AUTHARIZATION FILTERS
+---------------------
+
+public function before(user $user)
+{
+	return $user->=13;
+	return true;
+}
+
+before code is need to change in conversationPolicy.php file
+
+fromthis section we learned about authorization filter.
+
+
+GUESSING THE ABILITY NAME
+-------------------------
+
+public function store(Reply $reply)
+{
+	$this->authorize($reply->conversation);
+	$reply->conversation->setBestReply($reply);
+	return back();
+}
+
+
+MIDDLEWARE BASED AUTHORIZATION
+
+$this->authorize('view',$conversation);
+Route::get('conversations'/{conversation}
+'conversation controller@show')->middleware('can' view,conversation);
+
+RULES AND ABILITIES
+
+php artisan make:migration create_roles_tables --table=roles
+
